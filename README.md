@@ -5,6 +5,7 @@ Custom ports for vcpkg:
 - lemon - Parser generator tool
 - portmidi - I/O library for MIDI
 - jack2 - headers for JACK on Windows
+- soundtouch - Audio stretching library
 - zidl - Interface code/documentation generator tool
 - dbgenpp - Sqlite/C++ code generator tool
 - buzz-dsplib - DSP library for authoring Jeskola Buzz machines
