@@ -1,5 +1,10 @@
 include(vcpkg_common_functions)
 
+if (VCPKG_LIBRARY_LINKAGE STREQUAL dynamic)
+    message(STATUS "Warning: Dynamic building not supported. Building static.")
+    set(VCPKG_LIBRARY_LINKAGE static)
+endif()
+
 if(VCPKG_CMAKE_SYSTEM_NAME STREQUAL "WindowsStore")
     message(FATAL_ERROR "WindowsStore not supported")
 endif()
@@ -14,12 +19,17 @@ vcpkg_download_distfile(ARCHIVE
 )
 vcpkg_extract_source_archive(${ARCHIVE})
 
-# Only install headers, developers install JACK for Windows separately and embed JackWeakAPI.c in their apps
+# Install headers and a statically built JackWeakAPI.c
+file(COPY ${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt DESTINATION ${SOURCE_PATH})
 
-file(INSTALL ${SOURCE_PATH}/common/jack DESTINATION ${CURRENT_PACKAGES_DIR}/include FILES_MATCHING PATTERN "*.h")
+vcpkg_configure_cmake(
+    SOURCE_PATH ${SOURCE_PATH}
+)
 
-file(INSTALL ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/jack2 RENAME copyright)
+vcpkg_install_cmake()
+
+# Remove duplicate headers
+file(REMOVE_RECURSE ${CURRENT_PACKAGES_DIR}/debug/include)
 
 # Handle copyright
-# file(COPY ${SOURCE_PATH}/NO_WARRANTY DESTINATION ${CURRENT_PACKAGES_DIR}/share/re2c)
-# file(RENAME ${CURRENT_PACKAGES_DIR}/share/re2c/NO_WARRANTY ${CURRENT_PACKAGES_DIR}/share/re2c/copyright)
+file(INSTALL ${SOURCE_PATH}/README DESTINATION ${CURRENT_PACKAGES_DIR}/share/jack2 RENAME copyright)
