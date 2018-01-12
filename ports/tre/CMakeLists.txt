@@ -20,6 +20,7 @@ set (SRCS
     lib/tre-parse.c
     lib/tre-stack.c
     lib/xmalloc.c
+    win32/tre.def
 )
 
 include_directories(win32 include/tre)
@@ -33,5 +34,4 @@ install(
   ARCHIVE DESTINATION lib
 )
 
-install(FILES ${HEADERS} DESTINATION include)
-
+install(FILES ${HEADERS} DESTINATION include/tre)
